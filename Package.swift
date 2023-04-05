@@ -1,7 +1,7 @@
 // swift-tools-version:5.7
 
 //
-// This source file is part of the TemplatePackage open source project
+// This source file is part of the CardinalKit open-source project
 // 
 // SPDX-FileCopyrightText: 2022 Stanford University and the project authors (see CONTRIBUTORS.md)
 // 
@@ -12,21 +12,21 @@ import PackageDescription
 
 
 let package = Package(
-    name: "TemplatePackage",
+    name: "XCTRuntimeAssertions",
     platforms: [
         .iOS(.v16)
     ],
     products: [
-        .library(name: "TemplatePackage", targets: ["TemplatePackage"])
+        .library(name: "XCTRuntimeAssertions", targets: ["XCTRuntimeAssertions"])
     ],
     targets: [
         .target(
-            name: "TemplatePackage"
+            name: "XCTRuntimeAssertions"
         ),
         .testTarget(
-            name: "TemplatePackageTests",
+            name: "XCTRuntimeAssertionsTests",
             dependencies: [
-                .target(name: "TemplatePackage")
+                .target(name: "XCTRuntimeAssertions")
             ]
         )
     ]
