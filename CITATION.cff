@@ -12,5 +12,6 @@ authors:
 - family-names: "Schmiedmayer"
   given-names: "Paul"
   orcid: "https://orcid.org/0000-0002-8607-9148"
+doi: 10.5281/zenodo.7800545
 title: "XCTRuntimeAssertions"
 url: "https://github.com/StanfordBDHG/XCTRuntimeAssertions"
