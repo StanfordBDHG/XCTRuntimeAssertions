@@ -31,7 +31,10 @@ public func XCTRuntimeAssertion<T>(
     _ expression: @escaping () throws -> T
 ) throws -> T {
     let fulfillmentCount = Counter()
-    let xctRuntimeAssertionId = setupXCTRuntimeAssertionInjector(fulfillmentCount: fulfillmentCount, validateRuntimeAssertion: validateRuntimeAssertion)
+    let xctRuntimeAssertionId = setupXCTRuntimeAssertionInjector(
+        fulfillmentCount: fulfillmentCount,
+        validateRuntimeAssertion: validateRuntimeAssertion
+    )
     
     var result: Result<T, Error>
     do {
@@ -79,7 +82,10 @@ public func XCTRuntimeAssertion<T>(
     _ expression: @escaping () async throws -> T
 ) async throws -> T {
     let fulfillmentCount = Counter()
-    let xctRuntimeAssertionId = setupXCTRuntimeAssertionInjector(fulfillmentCount: fulfillmentCount, validateRuntimeAssertion: validateRuntimeAssertion)
+    let xctRuntimeAssertionId = setupXCTRuntimeAssertionInjector(
+        fulfillmentCount: fulfillmentCount,
+        validateRuntimeAssertion: validateRuntimeAssertion
+    )
     
     var result: Result<T, Error>
     do {

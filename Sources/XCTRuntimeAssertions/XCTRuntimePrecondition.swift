@@ -29,7 +29,10 @@ public func XCTRuntimePrecondition(
     _ expression: @escaping () -> Void
 ) throws {
     let fulfillmentCount = Counter()
-    let xctRuntimeAssertionId = setupXCTRuntimeAssertionInjector(fulfillmentCount: fulfillmentCount, validateRuntimeAssertion: validateRuntimeAssertion)
+    let xctRuntimeAssertionId = setupXCTRuntimeAssertionInjector(
+        fulfillmentCount: fulfillmentCount,
+        validateRuntimeAssertion: validateRuntimeAssertion
+    )
     
     // We have to run the operation on a `DispatchQueue` as we have to call `RunLoop.current.run()` in the `preconditionFailure` call.
     let dispatchQueue = DispatchQueue(label: "XCTRuntimePrecondition-\(xctRuntimeAssertionId)")
@@ -74,7 +77,10 @@ public func XCTRuntimePrecondition(
     _ expression: @escaping () async -> Void
 ) throws {
     let fulfillmentCount = Counter()
-    let xctRuntimeAssertionId = setupXCTRuntimeAssertionInjector(fulfillmentCount: fulfillmentCount, validateRuntimeAssertion: validateRuntimeAssertion)
+    let xctRuntimeAssertionId = setupXCTRuntimeAssertionInjector(
+        fulfillmentCount: fulfillmentCount,
+        validateRuntimeAssertion: validateRuntimeAssertion
+    )
     
     let task = Task {
         await expression()
