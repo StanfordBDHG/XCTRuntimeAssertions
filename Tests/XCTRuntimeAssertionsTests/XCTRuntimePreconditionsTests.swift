@@ -78,7 +78,7 @@ final class XCTRuntimePreconditionsTests: XCTestCase {
             }
         } catch let error as XCTFail {
             try? await Task.sleep(for: .seconds(0.5))
-            XCTAssertTrue(error.description.contains("The precondition was never called."))
+            XCTAssertTrue(error.description.contains("The precondition was called multiple times."))
         }
     }
 }
