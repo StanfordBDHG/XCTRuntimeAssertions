@@ -30,16 +30,18 @@ You can use XCTestExtensions in your tests. The [API documentation](https://swif
 `XCTRuntimeAssertion` for catching assertions:
 ```swift
 try XCTRuntimeAssertion {
- assertionFailure()
+    assertionFailure()
 }
 ```
 
 `XCTRuntimePrecondition` for catching preconditions:
 ```swift
 try XCTRuntimePrecondition {
- preconditionFailure()
+    preconditionFailure()
 }
 ```
+
+`XCTRuntimeAssertion` and `XCTRuntimePrecondition` also support the execution of async code.
 
 For more information, please refer to the [API documentation](https://swiftpackageindex.com/StanfordBDHG/XCTRuntimeAssertions/documentation).
 

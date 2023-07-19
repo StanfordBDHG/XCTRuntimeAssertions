@@ -1,8 +1,17 @@
 //
-//  File.swift
-//  
+// This source file is part of the Stanford XCTRuntimeAssertions open-source project
 //
-//  Created by Paul Shmiedmayer on 7/19/23.
+// SPDX-FileCopyrightText: 2022 Stanford University and the project authors (see CONTRIBUTORS.md)
+//
+// SPDX-License-Identifier: MIT
 //
 
-import Foundation
+
+class Counter {
+    var counter: Int
+    
+    
+    init(counter: Int = 0) {
+        self.counter = counter
+    }
+}

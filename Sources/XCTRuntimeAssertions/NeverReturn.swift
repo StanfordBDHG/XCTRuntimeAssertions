@@ -1,8 +1,19 @@
 //
-//  File.swift
-//  
+// This source file is part of the Stanford XCTRuntimeAssertions open-source project
 //
-//  Created by Paul Shmiedmayer on 7/19/23.
+// SPDX-FileCopyrightText: 2022 Stanford University and the project authors (see CONTRIBUTORS.md)
+//
+// SPDX-License-Identifier: MIT
 //
 
+#if DEBUG || TEST
 import Foundation
+
+
+func neverReturn() -> Never {
+    // This is unfortunate but as far as I can see the only feasable way to return Never without calling a runtime crashing function, e.g. `fatalError()`.
+    repeat {
+        RunLoop.current.run()
+    } while (true)
+}
+#endif
