@@ -149,7 +149,7 @@ private func assertFulfillmentCount(
     if fulfillmentCount.counter != expectedFulfillmentCount {
         throw XCTFail(
             message: """
-                     The assertion fulfillment count is \(fulfillmentCount.counter), expected \(expectedFulfillmentCount).
+                     Measured an fulfillment count of \(fulfillmentCount.counter), expected \(expectedFulfillmentCount).
                      \(message()) at \(file):\(line)
                      """
         )
