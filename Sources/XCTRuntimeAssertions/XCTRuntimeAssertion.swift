@@ -137,6 +137,7 @@ private func setupXCTRuntimeAssertionInjector(fulfillmentCount: Counter, validat
     return xctRuntimeAssertionId
 }
 
+
 private func assertFulfillmentCount(
     _ fulfillmentCount: Counter,
     expectedFulfillmentCount: UInt,
