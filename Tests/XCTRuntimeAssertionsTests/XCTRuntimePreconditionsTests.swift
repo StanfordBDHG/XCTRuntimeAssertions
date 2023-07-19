@@ -81,4 +81,15 @@ final class XCTRuntimePreconditionsTests: XCTestCase {
             XCTAssertTrue(error.description.contains("The precondition was called multiple times."))
         }
     }
+
+    func testCallHappensWithoutInjection() {
+        var called = false
+
+        precondition({
+            called = true
+            return true
+        }(), "This could fail")
+
+        XCTAssertTrue(called, "precondition was never called!")
+    }
 }
