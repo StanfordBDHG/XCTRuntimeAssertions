@@ -76,23 +76,15 @@ public func XCTRuntimePrecondition(
     let fulfillmentCount = Counter()
     let xctRuntimeAssertionId = setupXCTRuntimeAssertionInjector(fulfillmentCount: fulfillmentCount, validateRuntimeAssertion: validateRuntimeAssertion)
     
-    // We have to run the operation on a `DispatchQueue` as we have to call `RunLoop.current.run()` in the `preconditionFailure` call.
-    let dispatchQueue = DispatchQueue(label: "XCTRuntimePrecondition-\(xctRuntimeAssertionId)")
-    
-    var task: Task<Void, Never>?
-    let expressionWorkItem = DispatchWorkItem {
-        task = Task {
-            await expression()
-        }
+    let task = Task {
+        await expression()
     }
-    dispatchQueue.async(execute: expressionWorkItem)
     
     // We don't use:
     // `wait(for: [expectation], timeout: timeout)`
     // here as we need to make the method independent of XCTestCase to also use it in our TestApp UITest target which fails if you import XCTest.
     usleep(useconds_t(1_000_000 * timeout))
-    expressionWorkItem.cancel()
-    task?.cancel()
+    task.cancel()
     
     try assertFulfillmentCount(
         fulfillmentCount,
