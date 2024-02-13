@@ -17,7 +17,7 @@ on:
 
 jobs:
   buildandtest_ios:
-    name: Build and Test Swift Package
+    name: Build and Test Swift Package iOS
     uses: StanfordBDHG/.github/.github/workflows/xcodebuild-or-fastlane.yml@v2
     with:
       artifactname: XCTRuntimeAssertions-iOS.xcresult
