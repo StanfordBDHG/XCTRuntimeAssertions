@@ -28,7 +28,7 @@ jobs:
     uses: StanfordBDHG/.github/.github/workflows/xcodebuild-or-fastlane.yml@v2
     with:
       runsonlabels: '["macOS", "self-hosted"]'
-      scheme: SpeziFoundation
+      scheme: XCTRuntimeAssertions
       destination: 'platform=watchOS Simulator,name=Apple Watch Series 9 (45mm)'
       resultBundle: XCTRuntimeAssertions-watchOS.xcresult
       artifactname: XCTRuntimeAssertions-watchOS.xcresult
@@ -38,7 +38,7 @@ jobs:
     with:
       runsonlabels: '["macOS", "self-hosted"]'
       xcodeversion: latest
-      scheme: SpeziFoundation
+      scheme: XCTRuntimeAssertions
       destination: 'platform=visionOS Simulator,name=Apple Vision Pro'
       resultBundle: XCTRuntimeAssertions-visionOS.xcresult
       artifactname: XCTRuntimeAssertions-visionOS.xcresult
@@ -48,7 +48,7 @@ jobs:
     with:
       runsonlabels: '["macOS", "self-hosted"]'
       xcodeversion: latest
-      scheme: SpeziFoundation
+      scheme: XCTRuntimeAssertions
       destination: 'platform=tvOS Simulator,name=Apple TV 4K (3rd generation)'
       resultBundle: XCTRuntimeAssertions-tvOS.xcresult
       artifactname: XCTRuntimeAssertions-tvOS.xcresult
@@ -58,7 +58,7 @@ jobs:
     with:
       runsonlabels: '["macOS", "self-hosted"]'
       xcodeversion: latest
-      scheme: SpeziFoundation
+      scheme: XCTRuntimeAssertions
       destination: 'platform=macOS,arch=arm64'
       resultBundle: XCTRuntimeAssertions-macOS.xcresult
       artifactname: XCTRuntimeAssertions-macOS.xcresult
