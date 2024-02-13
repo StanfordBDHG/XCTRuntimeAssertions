@@ -25,7 +25,7 @@ jobs:
       scheme: XCTRuntimeAssertions
   buildandtest_watchos:
     name: Build and Test Swift Package watchOS
-    uses: StanfordSpezi/.github/.github/workflows/xcodebuild-or-fastlane.yml@v2
+    uses: StanfordBDHG/.github/.github/workflows/xcodebuild-or-fastlane.yml@v2
     with:
       runsonlabels: '["macOS", "self-hosted"]'
       scheme: SpeziFoundation
@@ -34,7 +34,7 @@ jobs:
       artifactname: XCTRuntimeAssertions-watchOS.xcresult
   buildandtest_visionos:
     name: Build and Test Swift Package visionOS
-    uses: StanfordSpezi/.github/.github/workflows/xcodebuild-or-fastlane.yml@v2
+    uses: StanfordBDHG/.github/.github/workflows/xcodebuild-or-fastlane.yml@v2
     with:
       runsonlabels: '["macOS", "self-hosted"]'
       xcodeversion: latest
@@ -44,7 +44,7 @@ jobs:
       artifactname: XCTRuntimeAssertions-visionOS.xcresult
   buildandtest_tvos:
     name: Build and Test Swift Package tvOS
-    uses: StanfordSpezi/.github/.github/workflows/xcodebuild-or-fastlane.yml@v2
+    uses: StanfordBDHG/.github/.github/workflows/xcodebuild-or-fastlane.yml@v2
     with:
       runsonlabels: '["macOS", "self-hosted"]'
       xcodeversion: latest
@@ -54,7 +54,7 @@ jobs:
       artifactname: XCTRuntimeAssertions-tvOS.xcresult
   buildandtest_macos:
     name: Build and Test Swift Package macOS
-    uses: StanfordSpezi/.github/.github/workflows/xcodebuild-or-fastlane.yml@v2
+    uses: StanfordBDHG/.github/.github/workflows/xcodebuild-or-fastlane.yml@v2
     with:
       runsonlabels: '["macOS", "self-hosted"]'
       xcodeversion: latest
