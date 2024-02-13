@@ -16,24 +16,55 @@ on:
   workflow_dispatch:
 
 jobs:
-  buildandtest:
+  buildandtest_ios:
     name: Build and Test Swift Package
     uses: StanfordBDHG/.github/.github/workflows/xcodebuild-or-fastlane.yml@v2
     with:
-      artifactname: XCTRuntimeAssertions.xcresult
+      artifactname: XCTRuntimeAssertions-iOS.xcresult
       runsonlabels: '["macOS", "self-hosted"]'
       scheme: XCTRuntimeAssertions
-  buildandtestuitests:
-    name: Build and Test UI Tests
-    uses: StanfordBDHG/.github/.github/workflows/xcodebuild-or-fastlane.yml@v2
+  buildandtest_watchos:
+    name: Build and Test Swift Package watchOS
+    uses: StanfordSpezi/.github/.github/workflows/xcodebuild-or-fastlane.yml@v2
     with:
-      artifactname: TestApp.xcresult
       runsonlabels: '["macOS", "self-hosted"]'
-      path: 'Tests/UITests'
-      scheme: TestApp
+      scheme: SpeziFoundation
+      destination: 'platform=watchOS Simulator,name=Apple Watch Series 9 (45mm)'
+      resultBundle: XCTRuntimeAssertions-watchOS.xcresult
+      artifactname: XCTRuntimeAssertions-watchOS.xcresult
+  buildandtest_visionos:
+    name: Build and Test Swift Package visionOS
+    uses: StanfordSpezi/.github/.github/workflows/xcodebuild-or-fastlane.yml@v2
+    with:
+      runsonlabels: '["macOS", "self-hosted"]'
+      xcodeversion: latest
+      scheme: SpeziFoundation
+      destination: 'platform=visionOS Simulator,name=Apple Vision Pro'
+      resultBundle: XCTRuntimeAssertions-visionOS.xcresult
+      artifactname: XCTRuntimeAssertions-visionOS.xcresult
+  buildandtest_tvos:
+    name: Build and Test Swift Package tvOS
+    uses: StanfordSpezi/.github/.github/workflows/xcodebuild-or-fastlane.yml@v2
+    with:
+      runsonlabels: '["macOS", "self-hosted"]'
+      xcodeversion: latest
+      scheme: SpeziFoundation
+      destination: 'platform=tvOS Simulator,name=Apple TV 4K (3rd generation)'
+      resultBundle: XCTRuntimeAssertions-tvOS.xcresult
+      artifactname: XCTRuntimeAssertions-tvOS.xcresult
+  buildandtest_macos:
+    name: Build and Test Swift Package macOS
+    uses: StanfordSpezi/.github/.github/workflows/xcodebuild-or-fastlane.yml@v2
+    with:
+      runsonlabels: '["macOS", "self-hosted"]'
+      xcodeversion: latest
+      scheme: SpeziFoundation
+      destination: 'platform=macOS,arch=arm64'
+      resultBundle: XCTRuntimeAssertions-macOS.xcresult
+      artifactname: XCTRuntimeAssertions-macOS.xcresult
   uploadcoveragereport:
     name: Upload Coverage Report
-    needs: [buildandtest, buildandtestuitests]
+    needs: [buildandtest_ios, buildandtest_visionos, buildandtest_watchos, buildandtest_tvos, buildandtest_macos]
     uses: StanfordBDHG/.github/.github/workflows/create-and-upload-coverage-report.yml@v2
     with:
-      coveragereports: XCTRuntimeAssertions.xcresult TestApp.xcresult
+      coveragereports: XCTRuntimeAssertions-iOS.xcresult XCTRuntimeAssertions-watchOS.xcresult XCTRuntimeAssertions-visionOS.xcresult XCTRuntimeAssertions-tvOS.xcresult XCTRuntimeAssertions-macOS.xcresult
