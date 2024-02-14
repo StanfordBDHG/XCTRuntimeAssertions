@@ -20,9 +20,10 @@ jobs:
     name: Build and Test Swift Package iOS
     uses: StanfordBDHG/.github/.github/workflows/xcodebuild-or-fastlane.yml@v2
     with:
-      artifactname: XCTRuntimeAssertions-iOS.xcresult
       runsonlabels: '["macOS", "self-hosted"]'
       scheme: XCTRuntimeAssertions
+      resultBundle: XCTRuntimeAssertions-iOS.xcresult
+      artifactname: XCTRuntimeAssertions-iOS.xcresult
   buildandtest_watchos:
     name: Build and Test Swift Package watchOS
     uses: StanfordBDHG/.github/.github/workflows/xcodebuild-or-fastlane.yml@v2
@@ -37,7 +38,6 @@ jobs:
     uses: StanfordBDHG/.github/.github/workflows/xcodebuild-or-fastlane.yml@v2
     with:
       runsonlabels: '["macOS", "self-hosted"]'
-      xcodeversion: latest
       scheme: XCTRuntimeAssertions
       destination: 'platform=visionOS Simulator,name=Apple Vision Pro'
       resultBundle: XCTRuntimeAssertions-visionOS.xcresult
@@ -47,7 +47,6 @@ jobs:
     uses: StanfordBDHG/.github/.github/workflows/xcodebuild-or-fastlane.yml@v2
     with:
       runsonlabels: '["macOS", "self-hosted"]'
-      xcodeversion: latest
       scheme: XCTRuntimeAssertions
       destination: 'platform=tvOS Simulator,name=Apple TV 4K (3rd generation)'
       resultBundle: XCTRuntimeAssertions-tvOS.xcresult
@@ -57,7 +56,6 @@ jobs:
     uses: StanfordBDHG/.github/.github/workflows/xcodebuild-or-fastlane.yml@v2
     with:
       runsonlabels: '["macOS", "self-hosted"]'
-      xcodeversion: latest
       scheme: XCTRuntimeAssertions
       destination: 'platform=macOS,arch=arm64'
       resultBundle: XCTRuntimeAssertions-macOS.xcresult
