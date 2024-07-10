@@ -74,7 +74,7 @@ public func XCTRuntimePrecondition(
     _ message: @autoclosure () -> String = "",
     file: StaticString = #filePath,
     line: UInt = #line,
-    _ expression: @escaping () async -> Void
+    _ expression: @escaping @Sendable () async -> Void
 ) throws {
     let fulfillmentCount = Counter()
     let xctRuntimeAssertionId = setupXCTRuntimeAssertionInjector(
