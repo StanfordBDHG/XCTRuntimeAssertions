@@ -9,6 +9,7 @@
 #if DEBUG || TEST
 import Foundation
 
+
 private final class RuntimeInjections: Sendable {
     private nonisolated(unsafe) var injected: [XCTRuntimeAssertionInjector] = []
     private let lock = NSLock()
