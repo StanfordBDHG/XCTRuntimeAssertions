@@ -25,7 +25,7 @@ import XCTest
 ///   - expression: The expression that is evaluated.
 public func XCTRuntimeAssertion<T, E: Error>( // swiftlint:disable:this function_default_parameter_at_end
     validateRuntimeAssertion: (@Sendable (String) -> Void)? = nil,
-    expectedFulfillmentCount: UInt = 2,
+    expectedFulfillmentCount: UInt = 1,
     _ message: @autoclosure () -> String = "",
     file: StaticString = #filePath,
     line: UInt = #line,
@@ -48,7 +48,7 @@ public func XCTRuntimeAssertion<T, E: Error>( // swiftlint:disable:this function
 ///   - expression: The async expression that is evaluated.
 public func XCTRuntimeAssertion<T, E: Error>(
     validateRuntimeAssertion: (@Sendable (String) -> Void)? = nil,
-    expectedFulfillmentCount: UInt = 2,
+    expectedFulfillmentCount: UInt = 1,
     _ message: @autoclosure () -> String = "",
     file: StaticString = #filePath,
     line: UInt = #line,

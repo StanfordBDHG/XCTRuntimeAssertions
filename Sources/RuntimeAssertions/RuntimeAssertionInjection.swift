@@ -10,12 +10,12 @@ import Foundation
 
 
 @usableFromInline
-package final class RuntimeAssertionInjection {
+package struct RuntimeAssertionInjection: Sendable {
     @usableFromInline package typealias AssertCall = @Sendable (() -> Bool, () -> String, StaticString, UInt) -> Void
     @usableFromInline package typealias PreconditionCall = @Sendable (() -> Bool, () -> String, StaticString, UInt) -> Void
 
     
-    @usableFromInline static let injection = RuntimeInjections()
+    @usableFromInline @TaskLocal static var current: RuntimeAssertionInjection?
 
     
     @usableFromInline package let id: UUID
@@ -67,18 +67,32 @@ package final class RuntimeAssertionInjection {
         }
     }
 
-    @inlinable
-    package func inject() {
-        Self.injection.append(self)
+    package func withInjection<T, E: Error>(_ block: () throws(E) -> T) throws(E) -> T {
+        do {
+            // swiftlint:disable:next return_value_from_void_function
+            return try RuntimeAssertionInjection.$current.withValue(self) {
+                try block()
+            }
+        } catch {
+            guard let error = error as? E else {
+                Swift.preconditionFailure("Unexpected error type \(type(of: error))")
+            }
+            throw error
+        }
     }
 
-    @inlinable
-    package func remove() {
-        Self.injection.removeAll(for: self.id)
-    }
-
-    deinit {
-        remove()
+    package func withInjection<T, E: Error>(_ block: () async throws(E) -> T) async throws(E) -> T {
+        do {
+            // swiftlint:disable:next return_value_from_void_function
+            return try await RuntimeAssertionInjection.$current.withValue(self) {
+                try await block()
+            }
+        } catch {
+            guard let error = error as? E else {
+                Swift.preconditionFailure("Unexpected error type \(type(of: error))")
+            }
+            throw error
+        }
     }
 }
 
@@ -86,23 +100,19 @@ package final class RuntimeAssertionInjection {
 extension RuntimeAssertionInjection {
     @inlinable
     static func assert(_ condition: () -> Bool, message: () -> String, file: StaticString, line: UInt) {
-        if injection.isEmpty {
+        if let current {
+            current.assert(condition, message, file, line)
+        } else {
             Swift.assert(condition(), message(), file: file, line: line)
-        }
-
-        for runtimeAssertionInjector in injection.injections {
-            runtimeAssertionInjector.assert(condition, message, file, line)
         }
     }
 
     @inlinable
     static func precondition(_ condition: () -> Bool, message: () -> String, file: StaticString, line: UInt) {
-        if injection.isEmpty {
+        if let current {
+            current.precondition(condition, message, file, line)
+        } else {
             Swift.precondition(condition(), message(), file: file, line: line)
-        }
-
-        for runtimeAssertionInjector in injection.injections {
-            runtimeAssertionInjector.precondition(condition, message, file, line)
         }
     }
 }

@@ -11,7 +11,7 @@ import RuntimeAssertionsTesting
 import Testing
 
 
-@Suite("Runtime Precondition", .serialized)
+@Suite("Runtime Precondition")
 struct RuntimePreconditionsTests {
     @Test("Runtime Precondition")
     func testRuntimePrecondition() async {

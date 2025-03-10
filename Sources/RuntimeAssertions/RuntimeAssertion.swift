@@ -13,20 +13,13 @@ package func withRuntimeAssertion<T, E: Error>(
     validate: (Int) -> Void
 ) throws(E) -> T {
     let counter = Counter()
-    let injection = setupRuntimeAssertionInjection(fulfillmentCount: counter, validate: validateAssertion)
+    let injection = createInjection(fulfillmentCount: counter, validate: validateAssertion)
 
-    var result: Result<T, E>
-    do {
-        result = .success(try expression())
-    } catch {
-        result = .failure(error)
+    defer {
+        validate(counter.count)
     }
 
-    injection.remove()
-
-    validate(counter.count)
-
-    return try result.get()
+    return try injection.withInjection(expression)
 }
 
 
@@ -36,36 +29,22 @@ package func withRuntimeAssertion<T, E: Error>(
     validate: (Int) -> Void
 ) async throws(E) -> T {
     let counter = Counter()
-    let injection = setupRuntimeAssertionInjection(fulfillmentCount: counter, validate: validateAssertion)
+    let injection = createInjection(fulfillmentCount: counter, validate: validateAssertion)
 
-    var result: Result<T, E>
-    do {
-        result = .success(try await expression())
-    } catch {
-        result = .failure(error)
+    defer {
+        validate(counter.count)
     }
 
-    injection.remove()
-
-    validate(counter.count)
-
-    return try result.get()
+    return try await injection.withInjection(expression)
 }
 
 
-private func setupRuntimeAssertionInjection(
-    fulfillmentCount: Counter,
-    validate: (@Sendable (String) -> Void)?
-) -> RuntimeAssertionInjection {
-    let injection = RuntimeAssertionInjection(assert: { condition, message, _, _  in
+private func createInjection(fulfillmentCount: Counter, validate: (@Sendable (String) -> Void)?) -> RuntimeAssertionInjection {
+    RuntimeAssertionInjection(assert: { condition, message, _, _  in
         if !condition() {
-            // We execute the message closure independent of the availability of the `validateRuntimeAssertion` closure.
             let message = message()
             validate?(message)
             fulfillmentCount.increment()
         }
     })
-
-    injection.inject()
-    return injection
 }

@@ -11,7 +11,7 @@ import RuntimeAssertionsTesting
 import Testing
 
 
-@Suite("Runtime Assertions", .serialized)
+@Suite("Runtime Assertions")
 struct RuntimeAssertionsTests {
     @Test("Runtime Assertions")
     func testRuntimeAssertion() throws {

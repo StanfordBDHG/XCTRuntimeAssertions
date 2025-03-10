@@ -21,13 +21,17 @@ package func withRuntimePrecondition(
     validate: (Int) -> Void
 ) {
     let counter = Counter()
-    let injection = setupRuntimePreconditionInjection(fulfillmentCount: counter, validate: validatePrecondition)
+    let injection = createInjection(fulfillmentCount: counter, validate: validatePrecondition)
+
+    defer {
+        validate(counter.count)
+    }
 
     // We have to run the operation on a `DispatchQueue` as we have to call `RunLoop.current.run()` in the `preconditionFailure` call.
     let dispatchQueue = DispatchQueue(label: "RuntimePrecondition-\(injection.id)")
 
     let expressionWorkItem = DispatchWorkItem {
-        expression()
+        injection.withInjection(expression)
     }
     dispatchQueue.async(execute: expressionWorkItem)
 
@@ -36,10 +40,6 @@ package func withRuntimePrecondition(
     // here as we need to make the method independent of XCTestCase to also use it in our TestApp UITest target which fails if you import XCTest.
     usleep(useconds_t(1_000_000 * timeout))
     expressionWorkItem.cancel()
-
-    injection.remove()
-
-    validate(counter.count)
 }
 
 
@@ -50,11 +50,15 @@ package func withRuntimePrecondition(
     validate: (Int) -> Void
 ) {
     let counter = Counter()
-    let injection = setupRuntimePreconditionInjection(fulfillmentCount: counter, validate: validatePrecondition)
+    let injection = createInjection(fulfillmentCount: counter, validate: validatePrecondition)
+
+    defer {
+        validate(counter.count)
+    }
 
     let expressionClosure = UnsafeSendable(value: expression)
     let task = Task {
-        await expressionClosure.value()
+        await injection.withInjection(expressionClosure.value)
     }
 
     // We don't use:
@@ -62,28 +66,16 @@ package func withRuntimePrecondition(
     // here as we need to make the method independent of XCTestCase to also use it in our TestApp UITest target which fails if you import XCTest.
     usleep(useconds_t(1_000_000 * timeout))
     task.cancel()
-
-    injection.remove()
-
-    validate(counter.count)
 }
 
 
-private func setupRuntimePreconditionInjection(
-    fulfillmentCount: Counter,
-    validate: (@Sendable (String) -> Void)?
-) -> RuntimeAssertionInjection {
-    let injection = RuntimeAssertionInjection(precondition: { condition, message, _, _  in
+private func createInjection(fulfillmentCount: Counter, validate: (@Sendable (String) -> Void)?) -> RuntimeAssertionInjection {
+    RuntimeAssertionInjection(precondition: { condition, message, _, _  in
         if !condition() {
-            // We execute the message closure independent of the availability of the `validateRuntimeAssertion` closure.
             let message = message()
             validate?(message)
             fulfillmentCount.increment()
             neverReturn()
         }
     })
-
-    injection.inject()
-
-    return injection
 }
