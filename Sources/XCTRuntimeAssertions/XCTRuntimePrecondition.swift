@@ -8,7 +8,7 @@
 
 import Foundation
 import RuntimeAssertions
-#if canImport(XCTest) // TODO: does that work?
+#if canImport(XCTest)
 import XCTest
 #endif
 
