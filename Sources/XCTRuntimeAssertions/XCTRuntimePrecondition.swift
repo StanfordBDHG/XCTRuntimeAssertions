@@ -8,6 +8,10 @@
 
 #if DEBUG || TEST
 import Foundation
+import RuntimeAssertions
+#if canImport(XCTest) // TODO: does that work?
+import XCTest
+#endif
 
 
 /// `XCTRuntimePrecondition` allows you to test assertions of types that use the `precondition` and `preconditionFailure` functions of the `XCTRuntimeAssertions` target.
@@ -26,7 +30,7 @@ import Foundation
 ///   - expression: The expression that is evaluated.
 /// - Throws: Throws an `XCTFail` error if the expression does not trigger a runtime assertion with the parameters defined above.
 public func XCTRuntimePrecondition(
-    validateRuntimeAssertion: ((String) -> Void)? = nil,
+    validateRuntimeAssertion: (@Sendable (String) -> Void)? = nil,
     timeout: TimeInterval = 1,
     _ message: @autoclosure () -> String = "",
     file: StaticString = #filePath,
@@ -34,14 +38,14 @@ public func XCTRuntimePrecondition(
     _ expression: @escaping () -> Void
 ) throws {
     let fulfillmentCount = Counter()
-    let xctRuntimeAssertionId = setupXCTRuntimeAssertionInjector(
+    let injection = setupXCTRuntimeAssertionInjector(
         fulfillmentCount: fulfillmentCount,
         validateRuntimeAssertion: validateRuntimeAssertion
     )
     
     // We have to run the operation on a `DispatchQueue` as we have to call `RunLoop.current.run()` in the `preconditionFailure` call.
-    let dispatchQueue = DispatchQueue(label: "XCTRuntimePrecondition-\(xctRuntimeAssertionId)")
-    
+    let dispatchQueue = DispatchQueue(label: "XCTRuntimePrecondition-\(injection.id)")
+
     let expressionWorkItem = DispatchWorkItem {
         expression()
     }
@@ -52,8 +56,8 @@ public func XCTRuntimePrecondition(
     // here as we need to make the method independent of XCTestCase to also use it in our TestApp UITest target which fails if you import XCTest.
     usleep(useconds_t(1_000_000 * timeout))
     expressionWorkItem.cancel()
-    
-    XCTRuntimeAssertionInjector.removeRuntimeAssertionInjector(withId: xctRuntimeAssertionId)
+
+    injection.remove()
 
     try assertFulfillmentCount(
         fulfillmentCount,
@@ -79,7 +83,7 @@ public func XCTRuntimePrecondition(
 ///   - expression: The async expression that is evaluated.
 /// - Throws: Throws an `XCTFail` error if the expression does not trigger a runtime assertion with the parameters defined above.
 public func XCTRuntimePrecondition(
-    validateRuntimeAssertion: ((String) -> Void)? = nil,
+    validateRuntimeAssertion: (@Sendable (String) -> Void)? = nil,
     timeout: TimeInterval = 1,
     _ message: @autoclosure () -> String = "",
     file: StaticString = #filePath,
@@ -91,7 +95,7 @@ public func XCTRuntimePrecondition(
     }
 
     let fulfillmentCount = Counter()
-    let xctRuntimeAssertionId = setupXCTRuntimeAssertionInjector(
+    let injection = setupXCTRuntimeAssertionInjector(
         fulfillmentCount: fulfillmentCount,
         validateRuntimeAssertion: validateRuntimeAssertion
     )
@@ -106,8 +110,8 @@ public func XCTRuntimePrecondition(
     // here as we need to make the method independent of XCTestCase to also use it in our TestApp UITest target which fails if you import XCTest.
     usleep(useconds_t(1_000_000 * timeout))
     task.cancel()
-    
-    XCTRuntimeAssertionInjector.removeRuntimeAssertionInjector(withId: xctRuntimeAssertionId)
+
+    injection.remove()
 
     try assertFulfillmentCount(
         fulfillmentCount,
@@ -118,29 +122,23 @@ public func XCTRuntimePrecondition(
 }
 
 
-private func setupXCTRuntimeAssertionInjector(fulfillmentCount: Counter, validateRuntimeAssertion: ((String) -> Void)? = nil) -> UUID {
-    let xctRuntimeAssertionId = UUID()
-    
-    XCTRuntimeAssertionInjector.inject(
-        runtimeAssertionInjector: XCTRuntimeAssertionInjector(
-            id: xctRuntimeAssertionId,
-            precondition: { id, condition, message, _, _  in
-                guard id == xctRuntimeAssertionId else {
-                    return
-                }
-                
-                if !condition() {
-                    // We execute the message closure independent of the availability of the `validateRuntimeAssertion` closure.
-                    let message = message()
-                    validateRuntimeAssertion?(message)
-                    fulfillmentCount.counter += 1
-                    neverReturn()
-                }
-            }
-        )
-    )
-    
-    return xctRuntimeAssertionId
+private func setupXCTRuntimeAssertionInjector(
+    fulfillmentCount: Counter,
+    validateRuntimeAssertion: (@Sendable (String) -> Void)? = nil
+) -> RuntimeAssertionInjection {
+    let injection = RuntimeAssertionInjection(precondition: { condition, message, _, _  in
+        if !condition() {
+            // We execute the message closure independent of the availability of the `validateRuntimeAssertion` closure.
+            let message = message()
+            validateRuntimeAssertion?(message)
+            fulfillmentCount.increment()
+            neverReturn()
+        }
+    })
+
+    injection.inject()
+
+    return injection
 }
 
 private func assertFulfillmentCount(
@@ -149,17 +147,19 @@ private func assertFulfillmentCount(
     file: StaticString,
     line: UInt
 ) throws {
-    if fulfillmentCount.counter <= 0 {
-        throw XCTFail(
-            message: """
+    // TODO: doesn't throw anymore!
+    let counter = fulfillmentCount.count
+    if counter <= 0 {
+        XCTFail(
+            """
             The precondition was never called.
             \(message()) at \(file):\(line)
             """
         )
-    } else if fulfillmentCount.counter > 1 {
-        throw XCTFail(
-            message: """
-            The precondition was called multiple times.
+    } else if counter > 1 {
+        XCTFail(
+            """
+            The precondition was called multiple times (\(counter)).
             \(message()) at \(file):\(line)
             """
         )

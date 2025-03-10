@@ -1,4 +1,4 @@
-// swift-tools-version:5.9
+// swift-tools-version:6.0
 
 //
 // This source file is part of the Stanford XCTRuntimeAssertions open-source project
@@ -11,12 +11,6 @@
 import class Foundation.ProcessInfo
 import PackageDescription
 
-#if swift(<6)
-let swiftConcurrency: SwiftSetting = .enableExperimentalFeature("StrictConcurrency")
-#else
-let swiftConcurrency: SwiftSetting = .enableUpcomingFeature("StrictConcurrency")
-#endif
-
 
 let package = Package(
     name: "XCTRuntimeAssertions",
@@ -28,14 +22,27 @@ let package = Package(
         .macOS(.v13)
     ],
     products: [
+        .library(name: "RuntimeAssertions", targets: ["RuntimeAssertions"]),
+        .library(name: "RuntimeAssertionsTesting", targets: ["RuntimeAssertionsTesting"]),
         .library(name: "XCTRuntimeAssertions", targets: ["XCTRuntimeAssertions"])
     ],
     dependencies: swiftLintPackage(),
     targets: [
         .target(
+            name: "RuntimeAssertions",
+            plugins: [] + swiftLintPlugin()
+        ),
+        .target(
+            name: "RuntimeAssertionsTesting",
+            dependencies: [
+                .target(name: "RuntimeAssertions")
+            ],
+            plugins: [] + swiftLintPlugin()
+        ),
+        .target(
             name: "XCTRuntimeAssertions",
-            swiftSettings: [
-                swiftConcurrency
+            dependencies: [
+                .target(name: "RuntimeAssertions")
             ],
             plugins: [] + swiftLintPlugin()
         ),
@@ -44,13 +51,11 @@ let package = Package(
             dependencies: [
                 .target(name: "XCTRuntimeAssertions")
             ],
-            swiftSettings: [
-                swiftConcurrency
-            ],
             plugins: [] + swiftLintPlugin()
         )
     ]
 )
+
 
 func swiftLintPlugin() -> [Target.PluginUsage] {
     // Fully quit Xcode and open again with `open --env SPEZI_DEVELOPMENT_SWIFTLINT /Applications/Xcode.app`

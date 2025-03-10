@@ -8,6 +8,12 @@
 
 #if DEBUG || TEST
 import Foundation
+import RuntimeAssertions
+
+#if canImport(XCTest)
+// TODO: does this work?
+import XCTest
+#endif
 
 
 /// `XCTRuntimeAssertion` allows you to test assertions of types that use the `assert` and `assertionFailure` functions of the `XCTRuntimeAssertions` target.
@@ -23,7 +29,7 @@ import Foundation
 /// - Throws: Throws an `XCTFail` error if the expression does not trigger a runtime assertion with the parameters defined above.
 /// - Returns: The value of the function if it did not throw an error as it did not trigger a runtime assertion with the parameters defined above.
 public func XCTRuntimeAssertion<T>(
-    validateRuntimeAssertion: ((String) -> Void)? = nil,
+    validateRuntimeAssertion: (@Sendable (String) -> Void)? = nil,
     expectedFulfillmentCount: UInt = 1,
     _ message: @autoclosure () -> String = "",
     file: StaticString = #filePath,
@@ -31,7 +37,7 @@ public func XCTRuntimeAssertion<T>(
     _ expression: @escaping () throws -> T
 ) throws -> T {
     let fulfillmentCount = Counter()
-    let xctRuntimeAssertionId = setupXCTRuntimeAssertionInjector(
+    let injection = setupXCTRuntimeAssertionInjector(
         fulfillmentCount: fulfillmentCount,
         validateRuntimeAssertion: validateRuntimeAssertion
     )
@@ -43,7 +49,7 @@ public func XCTRuntimeAssertion<T>(
         result = .failure(error)
     }
 
-    XCTRuntimeAssertionInjector.removeRuntimeAssertionInjector(withId: xctRuntimeAssertionId)
+    injection.remove()
 
     try assertFulfillmentCount(
         fulfillmentCount,
@@ -74,7 +80,7 @@ public func XCTRuntimeAssertion<T>(
 /// - Throws: Throws an `XCTFail` error if the expression does not trigger a runtime assertion with the parameters defined above.
 /// - Returns: The value of the function if it did not throw an error as it did not trigger a runtime assertion with the parameters defined above.
 public func XCTRuntimeAssertion<T>(
-    validateRuntimeAssertion: ((String) -> Void)? = nil,
+    validateRuntimeAssertion: (@Sendable (String) -> Void)? = nil,
     expectedFulfillmentCount: UInt = 1,
     _ message: @autoclosure () -> String = "",
     file: StaticString = #filePath,
@@ -82,7 +88,7 @@ public func XCTRuntimeAssertion<T>(
     _ expression: @escaping () async throws -> T
 ) async throws -> T {
     let fulfillmentCount = Counter()
-    let xctRuntimeAssertionId = setupXCTRuntimeAssertionInjector(
+    let injection = setupXCTRuntimeAssertionInjector(
         fulfillmentCount: fulfillmentCount,
         validateRuntimeAssertion: validateRuntimeAssertion
     )
@@ -94,7 +100,7 @@ public func XCTRuntimeAssertion<T>(
         result = .failure(error)
     }
 
-    XCTRuntimeAssertionInjector.removeRuntimeAssertionInjector(withId: xctRuntimeAssertionId)
+    injection.remove()
 
     try assertFulfillmentCount(
         fulfillmentCount,
@@ -113,28 +119,21 @@ public func XCTRuntimeAssertion<T>(
 }
 
 
-private func setupXCTRuntimeAssertionInjector(fulfillmentCount: Counter, validateRuntimeAssertion: ((String) -> Void)? = nil) -> UUID {
-    let xctRuntimeAssertionId = UUID()
+private func setupXCTRuntimeAssertionInjector(
+    fulfillmentCount: Counter,
+    validateRuntimeAssertion: (@Sendable (String) -> Void)? = nil
+) -> RuntimeAssertionInjection {
+    let injection = RuntimeAssertionInjection(assert: { condition, message, _, _  in
+        if !condition() {
+            // We execute the message closure independent of the availability of the `validateRuntimeAssertion` closure.
+            let message = message()
+            validateRuntimeAssertion?(message)
+            fulfillmentCount.increment()
+        }
+    })
 
-    XCTRuntimeAssertionInjector.inject(
-        runtimeAssertionInjector: XCTRuntimeAssertionInjector(
-            id: xctRuntimeAssertionId,
-            assert: { id, condition, message, _, _  in
-                guard id == xctRuntimeAssertionId else {
-                    return
-                }
-                
-                if !condition() {
-                    // We execute the message closure independent of the availability of the `validateRuntimeAssertion` closure.
-                    let message = message()
-                    validateRuntimeAssertion?(message)
-                    fulfillmentCount.counter += 1
-                }
-            }
-        )
-    )
-
-    return xctRuntimeAssertionId
+    injection.inject()
+    return injection
 }
 
 
@@ -147,12 +146,13 @@ private func assertFulfillmentCount(
 ) throws {
     Swift.precondition(expectedFulfillmentCount > 0, "expectedFulfillmentCount has to be non-zero!")
 
-    if fulfillmentCount.counter != expectedFulfillmentCount {
-        throw XCTFail(
-            message: """
-                     Measured an fulfillment count of \(fulfillmentCount.counter), expected \(expectedFulfillmentCount).
-                     \(message()) at \(file):\(line)
-                     """
+    let count = fulfillmentCount.count
+    if count != expectedFulfillmentCount {
+        XCTFail( // TODO: doesn't throw anymore!
+             """
+             Measured an fulfillment count of \(count), expected \(expectedFulfillmentCount).
+             \(message()) at \(file):\(line)
+             """
         )
     }
 }
