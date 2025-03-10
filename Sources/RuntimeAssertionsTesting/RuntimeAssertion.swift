@@ -10,27 +10,41 @@ import RuntimeAssertions
 import Testing
 
 
-public func expectRuntimeAssertion<T, E: Error>(
+/// Test assertions that use `assert` or `assertionFailure` of the `RuntimeAssertions` library.
+/// - Parameters:
+///   - expectedCount: The number of time the expected assertion should occur when the `expression` is invoked. `0` is an invalid input.
+///   - comment: A comment describing the expectation.
+///   - assertion: Validate and handle the contents of the assertion.
+///   - sourceLocation: The source location to which recorded expectations and issues should be attributed.
+///   - expression: The expression to be evaluated.
+public func expectRuntimeAssertion<T, E: Error>( // swiftlint:disable:this function_default_parameter_at_end
     expectedCount: UInt = 1,
     _ comment: Comment? = nil,
-    validateAssertion: (@Sendable (String) -> Void)? = nil,
+    assertion: (@Sendable (String) -> Void)? = nil,
     sourceLocation: SourceLocation = #_sourceLocation,
     _ expression: () throws(E) -> T
 ) throws(E) -> T {
-    try withRuntimeAssertion(validateAssertion: validateAssertion, expression) { count in
+    try withRuntimeAssertion(validateAssertion: assertion, expression) { count in
         assertFulfillmentCount(count, expectedFulfillmentCount: expectedCount, comment, sourceLocation: sourceLocation)
     }
 }
 
 
+/// Test assertions that use `assert` or `assertionFailure` of the `RuntimeAssertions` library.
+/// - Parameters:
+///   - expectedCount: The number of time the expected assertion should occur when the `expression` is invoked. `0` is an invalid input.
+///   - comment: A comment describing the expectation.
+///   - assertion: Validate and handle the contents of the assertion.
+///   - sourceLocation: The source location to which recorded expectations and issues should be attributed.
+///   - expression: The expression to be evaluated.
 public func expectRuntimeAssertion<T, E: Error>(
     expectedCount: UInt = 1,
     _ comment: Comment? = nil,
-    validateAssertion: (@Sendable (String) -> Void)? = nil,
+    assertion: (@Sendable (String) -> Void)? = nil,
     sourceLocation: SourceLocation = #_sourceLocation,
     _ expression: () async throws(E) -> T
 ) async throws(E) -> T {
-    try await withRuntimeAssertion(validateAssertion: validateAssertion, expression) { count in
+    try await withRuntimeAssertion(validateAssertion: assertion, expression) { count in
         assertFulfillmentCount(count, expectedFulfillmentCount: expectedCount, comment, sourceLocation: sourceLocation)
     }
 }

@@ -27,7 +27,6 @@ import XCTest
 ///   - file: The file where the failure occurs. The default is the filename of the test case where you call this function.
 ///   - line: The line number where the failure occurs. The default is the line number where you call this function.
 ///   - expression: The expression that is evaluated.
-/// - Throws: Throws an `XCTFail` error if the expression does not trigger a runtime assertion with the parameters defined above.
 public func XCTRuntimePrecondition(
     validateRuntimeAssertion: (@Sendable (String) -> Void)? = nil,
     timeout: TimeInterval = 1,
@@ -55,7 +54,6 @@ public func XCTRuntimePrecondition(
 ///   - file: The file where the failure occurs. The default is the filename of the test case where you call this function.
 ///   - line: The line number where the failure occurs. The default is the line number where you call this function.
 ///   - expression: The async expression that is evaluated.
-/// - Throws: Throws an `XCTFail` error if the expression does not trigger a runtime assertion with the parameters defined above.
 public func XCTRuntimePrecondition(
     validateRuntimeAssertion: (@Sendable (String) -> Void)? = nil,
     timeout: TimeInterval = 1,

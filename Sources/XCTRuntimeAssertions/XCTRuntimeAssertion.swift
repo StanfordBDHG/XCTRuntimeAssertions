@@ -9,11 +9,9 @@
 import RuntimeAssertions
 
 #if canImport(XCTest)
-// TODO: does this work?
 import XCTest
 #endif
 
-// TODO: typed throws now require Swift 6
 
 /// `XCTRuntimeAssertion` allows you to test assertions of types that use the `assert` and `assertionFailure` functions of the `XCTRuntimeAssertions` target.
 /// - Parameters:
@@ -25,9 +23,7 @@ import XCTest
 ///   - file: The file where the failure occurs. The default is the filename of the test case where you call this function.
 ///   - line: The line number where the failure occurs. The default is the line number where you call this function.
 ///   - expression: The expression that is evaluated.
-/// - Throws: Throws an `XCTFail` error if the expression does not trigger a runtime assertion with the parameters defined above.
-/// - Returns: The value of the function if it did not throw an error as it did not trigger a runtime assertion with the parameters defined above.
-public func XCTRuntimeAssertion<T, E: Error>(
+public func XCTRuntimeAssertion<T, E: Error>( // swiftlint:disable:this function_default_parameter_at_end
     validateRuntimeAssertion: (@Sendable (String) -> Void)? = nil,
     expectedFulfillmentCount: UInt = 1,
     _ message: @autoclosure () -> String = "",
@@ -50,8 +46,6 @@ public func XCTRuntimeAssertion<T, E: Error>(
 ///   - file: The file where the failure occurs. The default is the filename of the test case where you call this function.
 ///   - line: The line number where the failure occurs. The default is the line number where you call this function.
 ///   - expression: The async expression that is evaluated.
-/// - Throws: Throws an `XCTFail` error if the expression does not trigger a runtime assertion with the parameters defined above.
-/// - Returns: The value of the function if it did not throw an error as it did not trigger a runtime assertion with the parameters defined above.
 public func XCTRuntimeAssertion<T, E: Error>(
     validateRuntimeAssertion: (@Sendable (String) -> Void)? = nil,
     expectedFulfillmentCount: UInt = 1,
