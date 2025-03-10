@@ -69,7 +69,6 @@ package struct RuntimeAssertionInjection: Sendable {
 
     package func withInjection<T, E: Error>(_ block: () throws(E) -> T) throws(E) -> T {
         do {
-            // swiftlint:disable:next return_value_from_void_function
             return try RuntimeAssertionInjection.$current.withValue(self) {
                 try block()
             }
@@ -83,7 +82,6 @@ package struct RuntimeAssertionInjection: Sendable {
 
     package func withInjection<T, E: Error>(_ block: () async throws(E) -> T) async throws(E) -> T {
         do {
-            // swiftlint:disable:next return_value_from_void_function
             return try await RuntimeAssertionInjection.$current.withValue(self) {
                 try await block()
             }

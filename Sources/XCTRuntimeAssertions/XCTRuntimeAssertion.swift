@@ -23,7 +23,7 @@ import XCTest
 ///   - file: The file where the failure occurs. The default is the filename of the test case where you call this function.
 ///   - line: The line number where the failure occurs. The default is the line number where you call this function.
 ///   - expression: The expression that is evaluated.
-public func XCTRuntimeAssertion<T, E: Error>( // swiftlint:disable:this function_default_parameter_at_end
+public func XCTRuntimeAssertion<T, E: Error>(
     validateRuntimeAssertion: (@Sendable (String) -> Void)? = nil,
     expectedFulfillmentCount: UInt = 1,
     _ message: @autoclosure () -> String = "",

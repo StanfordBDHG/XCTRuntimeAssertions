@@ -17,7 +17,7 @@ import Testing
 ///   - sourceLocation: The source location to which recorded expectations and issues should be attributed.
 ///   - expression: The expression to be evaluated.
 ///   - assertion: Validate and handle the contents of the assertion.
-public func expectRuntimeAssertion<T, E: Error>( // swiftlint:disable:this function_default_parameter_at_end
+public func expectRuntimeAssertion<T, E: Error>(
     _ comment: Comment? = nil,
     expectedCount: UInt = 1,
     sourceLocation: SourceLocation = #_sourceLocation,
