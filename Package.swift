@@ -13,7 +13,7 @@ import PackageDescription
 
 
 let package = Package(
-    name: "XCTRuntimeAssertions",
+    name: "RuntimeAssertions",
     platforms: [
         .iOS(.v16),
         .visionOS(.v1),
