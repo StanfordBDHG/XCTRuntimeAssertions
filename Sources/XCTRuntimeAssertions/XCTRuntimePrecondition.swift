@@ -29,7 +29,7 @@ import XCTest
 ///   - expression: The expression that is evaluated.
 public func XCTRuntimePrecondition(
     validateRuntimeAssertion: (@Sendable (String) -> Void)? = nil,
-    timeout: TimeInterval = 1,
+    timeout: TimeInterval = 2,
     _ message: @autoclosure () -> String = "",
     file: StaticString = #filePath,
     line: UInt = #line,
@@ -56,7 +56,7 @@ public func XCTRuntimePrecondition(
 ///   - expression: The async expression that is evaluated.
 public func XCTRuntimePrecondition(
     validateRuntimeAssertion: (@Sendable (String) -> Void)? = nil,
-    timeout: TimeInterval = 1,
+    timeout: TimeInterval = 2,
     _ message: @autoclosure () -> String = "",
     file: StaticString = #filePath,
     line: UInt = #line,

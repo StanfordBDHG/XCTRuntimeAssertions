@@ -47,12 +47,23 @@ let package = Package(
             plugins: [] + swiftLintPlugin()
         ),
         .testTarget(
+            name: "RuntimeAssertionsTests",
+            dependencies: [
+                .target(name: "RuntimeAssertions"),
+                .target(name: "RuntimeAssertionsTesting")
+            ],
+            plugins: [] + swiftLintPlugin()
+        ),
+        .testTarget(
             name: "XCTRuntimeAssertionsTests",
             dependencies: [
                 .target(name: "XCTRuntimeAssertions")
             ],
             plugins: [] + swiftLintPlugin()
         )
+    ],
+    swiftLanguageModes: [
+        .v5
     ]
 )
 
