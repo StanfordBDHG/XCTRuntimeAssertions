@@ -2,7 +2,7 @@
 
 <!--
 
-This source file is part of the Stanford XCTRuntimeAssertions open-source project
+This source file is part of the Stanford RuntimeAssertions open-source project
 
 SPDX-FileCopyrightText: 2025 Stanford University and the project authors (see CONTRIBUTORS.md)
 
@@ -27,7 +27,7 @@ Release builds will completely optimize out this runtime support library and dir
 
 ### Configure your System under Test
 
-To configure your System under Test, you just need to import the `RuntimeAssertion` package and call your runtime assertions functions as usual.
+To configure your System under Test, you just need to import the `RuntimeAssertion` library and call your runtime assertions functions as usual.
 
 ```swift
 import RuntimeAssertions

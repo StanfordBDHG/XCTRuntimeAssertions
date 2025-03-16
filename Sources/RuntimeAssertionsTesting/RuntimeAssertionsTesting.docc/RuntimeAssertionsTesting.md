@@ -2,7 +2,7 @@
 
 <!--
 
-This source file is part of the Stanford XCTRuntimeAssertions open-source project
+This source file is part of the Stanford RuntimeAssertions open-source project
 
 SPDX-FileCopyrightText: 2025 Stanford University and the project authors (see CONTRIBUTORS.md)
 
@@ -28,9 +28,13 @@ Below is a short code example demonstrating this for assertions:
 
 ```swift
 import RuntimeAssertionsTesting
+import Testing
 
-expectRuntimeAssertion {
-    // code containing a call to assert() of the runtime support ...
+@Test
+func testAssertion() {
+    expectRuntimeAssertion {
+        // code containing a call to assert() of the runtime support ...
+    }
 }
 ```
 
@@ -38,9 +42,13 @@ Below is a short code example demonstrating this for preconditions:
 
 ```swift
 import RuntimeAssertionsTesting
+import Testing
 
-expectRuntimePrecondition {
-    // code containing a call to precondition() of the runtime support ...
+@Test
+func testPrecondition() {
+    expectRuntimePrecondition {
+        // code containing a call to precondition() of the runtime support ...
+    }
 }
 ```
 
