@@ -81,6 +81,10 @@ func testPrecondition() {
 
 > Tip: Both expectation methods also support the execution of `async` code.
 
+Import the `RuntimeAssertionsTesting` module if you use Swift Testing; import `XCTRuntimeAssertions` if you use XCTest.
+
+> Important: Don't import `RuntimeAssertionsTesting` or `XCTRuntimeAssertions` in your application target.
+
 ## Contributing
 
 Contributions to this project are welcome. Please make sure to read the [contribution guidelines](https://github.com/StanfordBDHG/.github/blob/main/CONTRIBUTING.md) and the [contributor covenant code of conduct](https://github.com/StanfordBDHG/.github/blob/main/CODE_OF_CONDUCT.md) first.
