@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import RuntimeAssertions
 @testable import XCTRuntimeAssertions
 
 
