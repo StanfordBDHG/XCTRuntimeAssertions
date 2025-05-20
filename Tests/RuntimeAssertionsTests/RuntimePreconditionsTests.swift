@@ -74,6 +74,13 @@ struct RuntimePreconditionsTests {
             // nothing
         }
     }
+    
+    @Test("No preconditions")
+    func testNoPreconditionAsync() {
+        expectNoRuntimePrecondition { () async in
+            // nothing
+        }
+    }
 
     @Test("Precondition without injection")
     func testCallHappensWithoutInjection() {
