@@ -102,4 +102,16 @@ final class XCTRuntimePreconditionsTests: XCTestCase {
             precondition(test.property != "Hello World", "Failed successfully.")
         }
     }
+    
+    func testNoPrecondition() {
+        XCTAssertNoRuntimePrecondition {
+            // nothing going on in here
+        }
+    }
+    
+    func testNoPreconditionAsync() {
+        XCTAssertNoRuntimePrecondition { () async in
+            // nothing going on in here
+        }
+    }
 }

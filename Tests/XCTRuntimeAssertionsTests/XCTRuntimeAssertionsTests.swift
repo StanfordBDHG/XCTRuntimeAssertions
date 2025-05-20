@@ -95,6 +95,12 @@ final class XCTRuntimeAssertionsTests: XCTestCase {
             }
         }())
     }
+    
+    func testNoAssertion() {
+        XCTAssertRuntimeAssertion(expectedFulfillmentCount: 0) {
+            // ...
+        }
+    }
 
     func testCallHappensWithoutInjection() {
         var called = false
