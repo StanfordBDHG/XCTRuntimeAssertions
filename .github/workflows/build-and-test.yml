@@ -42,16 +42,16 @@ jobs:
       fail-fast: false
     with:
       runsonlabels: '["macOS", "self-hosted"]'
-      scheme: XCTRuntimeAssertions-Package
+      scheme: RuntimeAssertions-Package
       destination: ${{ matrix.platform.destination }}
       buildConfig: ${{ matrix.config }}
-      resultBundle: ${{ format('XCTRuntimeAssertions-Package-{0}-{1}.xcresult', matrix.platform.name, matrix.config) }}
-      artifactname: ${{ format('XCTRuntimeAssertions-Package-{0}-{1}.xcresult', matrix.platform.name, matrix.config) }}
+      resultBundle: ${{ format('RuntimeAssertions-Package-{0}-{1}.xcresult', matrix.platform.name, matrix.config) }}
+      artifactname: ${{ format('RuntimeAssertions-Package-{0}-{1}.xcresult', matrix.platform.name, matrix.config) }}
   uploadcoveragereport:
     name: Upload Coverage Report
     needs: [package_tests]
     uses: StanfordBDHG/.github/.github/workflows/create-and-upload-coverage-report.yml@v2
     with:
-      coveragereports: XCTRuntimeAssertions-Package-*.xcresult
+      coveragereports: RuntimeAssertions-Package-*.xcresult
     secrets:
       token: ${{ secrets.CODECOV_TOKEN }}
