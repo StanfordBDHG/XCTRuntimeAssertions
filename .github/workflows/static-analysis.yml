@@ -26,6 +26,8 @@ jobs:
   swiftlint:
     name: SwiftLint
     uses: StanfordBDHG/.github/.github/workflows/swiftlint.yml@lukas/fix-xcresult-merging
+    with:
+      version: latest
   markdown_link_check:
     name: Markdown Link Check
     uses: StanfordBDHG/.github/.github/workflows/markdown-link-check.yml@v2
