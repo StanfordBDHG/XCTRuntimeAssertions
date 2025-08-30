@@ -50,7 +50,7 @@ jobs:
   uploadcoveragereport:
     name: Upload Coverage Report
     needs: [package_tests]
-    uses: StanfordBDHG/.github/.github/workflows/create-and-upload-coverage-report.yml@v2
+    uses: StanfordBDHG/.github/.github/workflows/create-and-upload-coverage-report.yml@lukas/fix-xcresult-merging
     with:
       coveragereports: RuntimeAssertions-Package-*.xcresult
     secrets:
