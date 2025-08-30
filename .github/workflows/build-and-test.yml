@@ -27,10 +27,10 @@ jobs:
       matrix:
         config: [Debug]
         platform:
-          - name: iOS
-            destination: 'platform=iOS Simulator,name=iPhone 16 Pro'
-          # - name: macOS
-          #   destination: 'platform=macOS,arch=arm64'
+          # - name: iOS
+          #   destination: 'platform=iOS Simulator,name=iPhone 16 Pro'
+          - name: macOS
+            destination: 'platform=macOS,arch=arm64'
           # - name: 'Mac Catalyst'
           #   destination: 'platform=macOS,arch=arm64,variant=Mac Catalyst'
           # - name: watchOS
