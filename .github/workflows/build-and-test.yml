@@ -25,7 +25,7 @@ jobs:
     uses: StanfordBDHG/.github/.github/workflows/xcodebuild-or-fastlane.yml@lukas/fix-xcresult-merging
     strategy:
       matrix:
-        config: [Debug]
+        config: [Release]
         platform:
           # - name: iOS
           #   destination: 'platform=iOS Simulator,name=iPhone 16 Pro'
