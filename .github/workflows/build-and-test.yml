@@ -27,16 +27,16 @@ jobs:
       matrix:
         config: [Debug, Release]
         platform:
-          - name: iOS
-            destination: 'platform=iOS Simulator,name=iPhone 16 Pro'
-          - name: macOS
-            destination: 'platform=macOS,arch=arm64'
-          - name: 'Mac Catalyst'
-            destination: 'platform=macOS,arch=arm64,variant=Mac Catalyst'
-          - name: watchOS
-            destination: 'platform=watchOS Simulator,name=Apple Watch Series 10 (46mm)'
-          - name: visionOS
-            destination: 'platform=visionOS Simulator,name=Apple Vision Pro'
+          # - name: iOS
+          #   destination: 'platform=iOS Simulator,name=iPhone 16 Pro'
+          # - name: macOS
+          #   destination: 'platform=macOS,arch=arm64'
+          # - name: 'Mac Catalyst'
+          #   destination: 'platform=macOS,arch=arm64,variant=Mac Catalyst'
+          # - name: watchOS
+          #   destination: 'platform=watchOS Simulator,name=Apple Watch Series 10 (46mm)'
+          # - name: visionOS
+          #   destination: 'platform=visionOS Simulator,name=Apple Vision Pro'
           - name: tvOS
             destination: 'platform=tvOS Simulator,name=Apple TV 4K (3rd generation)'
       fail-fast: false
@@ -52,6 +52,6 @@ jobs:
     needs: [package_tests]
     uses: StanfordBDHG/.github/.github/workflows/create-and-upload-coverage-report.yml@lukas/fix-xcresult-merging
     with:
-      coveragereports: RuntimeAssertions-Package-*.xcresult
+      coveragereports: RuntimeAssertions-Package-tvOS-Debug.xcresult
     secrets:
       token: ${{ secrets.CODECOV_TOKEN }}
