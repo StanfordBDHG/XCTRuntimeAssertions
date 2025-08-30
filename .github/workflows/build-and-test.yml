@@ -1,5 +1,5 @@
 #
-# This source file is part of the Stanford Spezi open source project
+# This source file is part of the Stanford RuntimeAssertions open source project
 #
 # SPDX-FileCopyrightText: 2025 Stanford University and the project authors (see CONTRIBUTORS.md)
 #
@@ -25,20 +25,20 @@ jobs:
     uses: StanfordBDHG/.github/.github/workflows/xcodebuild-or-fastlane.yml@lukas/fix-xcresult-merging
     strategy:
       matrix:
-        config: [Debug]
+        config: [Debug, Release]
         platform:
-          # - name: iOS
-          #   destination: 'platform=iOS Simulator,name=iPhone 16 Pro'
+          - name: iOS
+            destination: 'platform=iOS Simulator,name=iPhone 16 Pro'
           - name: macOS
             destination: 'platform=macOS,arch=arm64'
-          # - name: 'Mac Catalyst'
-          #   destination: 'platform=macOS,arch=arm64,variant=Mac Catalyst'
-          # - name: watchOS
-          #   destination: 'platform=watchOS Simulator,name=Apple Watch Series 10 (46mm)'
-          # - name: visionOS
-          #   destination: 'platform=visionOS Simulator,name=Apple Vision Pro'
-          # - name: tvOS
-          #   destination: 'platform=tvOS Simulator,name=Apple TV 4K (3rd generation)'
+          - name: 'Mac Catalyst'
+            destination: 'platform=macOS,arch=arm64,variant=Mac Catalyst'
+          - name: watchOS
+            destination: 'platform=watchOS Simulator,name=Apple Watch Series 10 (46mm)'
+          - name: visionOS
+            destination: 'platform=visionOS Simulator,name=Apple Vision Pro'
+          - name: tvOS
+            destination: 'platform=tvOS Simulator,name=Apple TV 4K (3rd generation)'
       fail-fast: false
     with:
       runsonlabels: '["macOS", "self-hosted"]'
