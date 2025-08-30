@@ -22,7 +22,7 @@ concurrency:
 jobs:
   package_tests:
     name: Build and Test Swift Package ${{ matrix.platform.name }} (${{ matrix.config }})
-    uses: StanfordBDHG/.github/.github/workflows/xcodebuild-or-fastlane.yml@lukas/fix-xcresult-merging
+    uses: StanfordBDHG/.github/.github/workflows/xcodebuild-or-fastlane.yml@v2
     strategy:
       matrix:
         config: [Debug, Release]
@@ -50,7 +50,7 @@ jobs:
   uploadcoveragereport:
     name: Upload Coverage Report
     needs: [package_tests]
-    uses: StanfordBDHG/.github/.github/workflows/create-and-upload-coverage-report.yml@lukas/fix-xcresult-merging
+    uses: StanfordBDHG/.github/.github/workflows/create-and-upload-coverage-report.yml@v2
     with:
       coveragereports: RuntimeAssertions-Package-*.xcresult
     secrets:
